@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gestao-vagas-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gestao-vagas-backend
+  template:
+    metadata:
+      labels:
+        app: gestao-vagas-backend
+    spec:
+      imagePullSecrets:
+        - name: acr-secret
+      containers:
+        - image: maratonaaks.azurecr.io/gestao_vagas-backend:v1.0.0
+          name: gestao-vagas-backend
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: spring_datasource_url
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: spring_datasource_username
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: spring_datasource_password
+            - name: SECURITY_TOKEN_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: security_token_secret
+            - name: SECURITY_TOKEN_SECRET_CANDIDATE
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: security_token_secret_candidate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gestao-vagas-backend
+spec:
+  selector:
+    app: gestao-vagas-backend
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gestao-vagas-backend
+  annotations:
+    kubernetes.io/ingress.class: addon-http-application-routing
+spec:
+  rules:
+    - host: gestao-vagas-backend.a8acede154d84c43a037.brazilsouth.aksapp.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: gestao-vagas-backend
+                port:
+                  number: 80
