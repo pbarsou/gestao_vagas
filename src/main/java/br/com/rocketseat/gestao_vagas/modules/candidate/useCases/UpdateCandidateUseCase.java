@@ -1,5 +1,6 @@
 package br.com.rocketseat.gestao_vagas.modules.candidate.useCases;
 
+import br.com.rocketseat.gestao_vagas.exceptions.UserFoundException;
 import br.com.rocketseat.gestao_vagas.modules.candidate.CandidateEntity;
 import br.com.rocketseat.gestao_vagas.modules.candidate.CandidateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,18 @@ public class UpdateCandidateUseCase {
         CandidateEntity candidate = this.candidateRepository.findById(candidateEntity.getId()).orElseThrow(() -> {
             throw new UsernameNotFoundException("Candidate not found.");
         });
+
+        if(!candidateEntity.getUsername().equals(candidate.getUsername())) {
+            this.candidateRepository.findByUsername(candidateEntity.getUsername()).ifPresent((user) -> {
+                throw new UserFoundException();
+            });
+        }
+
+        if(!candidateEntity.getEmail().equals(candidate.getEmail())) {
+            this.candidateRepository.findByEmail(candidateEntity.getEmail()).ifPresent((user) -> {
+                throw new UserFoundException();
+            });
+        }
 
         candidate.setName(candidateEntity.getName());
         candidate.setUsername(candidateEntity.getUsername());
