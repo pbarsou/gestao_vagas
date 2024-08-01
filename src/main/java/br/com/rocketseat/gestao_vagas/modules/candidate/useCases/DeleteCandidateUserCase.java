@@ -16,8 +16,8 @@ public class DeleteCandidateUserCase {
     @Autowired
     CandidateRepository candidateRepository;
 
-    public void execute(UUID candidateId) {
-        CandidateEntity candidate = this.candidateRepository.findById(candidateId).orElseThrow(() -> {
+    public void execute(UUID idCandidate) {
+        CandidateEntity candidate = this.candidateRepository.findById(idCandidate).orElseThrow(() -> {
             throw new UsernameNotFoundException("Candidate not found.");
         });
 

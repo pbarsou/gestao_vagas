@@ -26,6 +26,7 @@ public class SecurityConfig {
                     auth.requestMatchers("/candidate/").permitAll()
                             . requestMatchers("/company/").permitAll()
                                     .requestMatchers("/company/auth").permitAll()
+                                    .requestMatchers(HttpMethod.DELETE, "/company/{id}").permitAll()
                                     .requestMatchers(HttpMethod.DELETE, "/candidate/{id}").permitAll()
                                     .requestMatchers("/candidate/auth").permitAll();
 
