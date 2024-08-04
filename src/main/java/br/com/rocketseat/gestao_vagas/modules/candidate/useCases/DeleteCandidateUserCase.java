@@ -14,7 +14,7 @@ import java.util.UUID;
 public class DeleteCandidateUserCase {
 
     @Autowired
-    CandidateRepository candidateRepository;
+    private CandidateRepository candidateRepository;
 
     public void execute(UUID idCandidate) {
         CandidateEntity candidate = this.candidateRepository.findById(idCandidate).orElseThrow(() -> {

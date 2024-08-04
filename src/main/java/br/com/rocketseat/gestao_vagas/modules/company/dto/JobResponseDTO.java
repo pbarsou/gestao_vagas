@@ -5,17 +5,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.UUID;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProfileCompanyResponseDTO {
+public class JobResponseDTO {
 
-    private String name;
-    private String username;
-    private String email;
-    private String website;
     private String description;
+    private String level;
+    private String benefits;
+    private UUID companyId;
+    private List<UUID> candidates;
 }

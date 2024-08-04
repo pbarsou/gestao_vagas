@@ -14,10 +14,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 public class SecurityConfig {
 
     @Autowired
-    private SecurityFilter securityCompanyFilter;
-
-    @Autowired
-    private SecurityCandidateFilter securityCandidateFilter;
+    private SecurityFilter securityFilter;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -26,16 +23,18 @@ public class SecurityConfig {
                     auth.requestMatchers("/candidate/").permitAll()
                             . requestMatchers("/company/").permitAll()
                                     .requestMatchers("/company/auth").permitAll()
-                                    .requestMatchers(HttpMethod.DELETE, "/company/{id}").permitAll()
-                                    .requestMatchers(HttpMethod.DELETE, "/candidate/{id}").permitAll()
-                                    .requestMatchers("/candidate/auth").permitAll();
+                                    .requestMatchers("/candidate/auth").permitAll()
+                                    .requestMatchers("/candidate/auth/admin").permitAll()
+                                    .requestMatchers("/company/auth/admin").permitAll()
+                                    .requestMatchers("/company/job/").permitAll()
+                                    .requestMatchers(HttpMethod.GET, "/company/job/**").hasRole("ADMIN")
+                                    .requestMatchers("/candidate/job/**").permitAll()
+                                    .requestMatchers( "/company/**").hasRole("ADMIN")
+                                    .requestMatchers( "/candidate/**").hasRole("ADMIN");
 
                     auth.anyRequest().authenticated();
                 })
-                .addFilterBefore(securityCandidateFilter, BasicAuthenticationFilter.class)
-                .addFilterBefore(securityCompanyFilter, BasicAuthenticationFilter.class);
-
-        ;
+                .addFilterBefore(securityFilter, BasicAuthenticationFilter.class);
         return http.build();
     }
 

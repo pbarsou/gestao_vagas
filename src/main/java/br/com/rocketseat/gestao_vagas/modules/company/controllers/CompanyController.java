@@ -40,12 +40,23 @@ public class CompanyController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<Object> get(HttpServletRequest request) {
+    public ResponseEntity<Object> getProfile(HttpServletRequest request) {
 
-        var idCompany = request.getAttribute("company_id");
+        var companyId = request.getAttribute("company_id");
 
         try {
-            var company = this.profileCompanyUseCase.execute(UUID.fromString(idCompany.toString()));
+            var company = this.profileCompanyUseCase.execute(UUID.fromString(companyId.toString()));
+            return ResponseEntity.ok().body(company);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Object> getCompany(@PathVariable UUID id, HttpServletRequest request) {
+        try {
+            var company = this.profileCompanyUseCase.execute(UUID.fromString(id.toString()));
             return ResponseEntity.ok().body(company);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -54,11 +65,24 @@ public class CompanyController {
 
     @PutMapping("/")
     public ResponseEntity<Object> put(@Valid @RequestBody CompanyEntity companyEntity, HttpServletRequest request) {
-        var idCompany = request.getAttribute("company_id");
-        companyEntity.setId(UUID.fromString(idCompany.toString()));
+        var companyId = request.getAttribute("company_id");
+
+        // Ensuring that only the user can change their information
+        companyEntity.setId(UUID.fromString(companyId.toString()));
 
         try {
-            var result = this.updateCompanyUseCase.execute(companyEntity);
+            var result = this.updateCompanyUseCase.execute(companyEntity, UUID.fromString(companyId.toString()));
+            return ResponseEntity.ok().body(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Object> putAdmin(@Valid @RequestBody CompanyEntity companyEntity, @PathVariable UUID id, HttpServletRequest request) {
+        try {
+            var result = this.updateCompanyUseCase.execute(companyEntity, id);
             return ResponseEntity.ok().body(result);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -66,7 +90,8 @@ public class CompanyController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> delete(@PathVariable UUID id) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Object> delete(@PathVariable UUID id, HttpServletRequest request) {
         try {
             this.deleteCompanyUseCase.execute(id);
             return ResponseEntity.noContent().build();

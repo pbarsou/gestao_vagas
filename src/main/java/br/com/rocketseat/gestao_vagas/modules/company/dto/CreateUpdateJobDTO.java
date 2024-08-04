@@ -3,7 +3,7 @@ package br.com.rocketseat.gestao_vagas.modules.company.dto;
 import lombok.Data;
 
 @Data
-public class CreateJobDTO {
+public class CreateUpdateJobDTO {
 
     private String description;
     private String benefits;

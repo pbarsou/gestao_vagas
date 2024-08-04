@@ -28,4 +28,14 @@ public class AuthCompanyController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
+
+    @PostMapping("/auth/admin")
+    public ResponseEntity<Object> authAdmin(@RequestBody AuthCompanyDTO authCompanyDTO) {
+        try {
+            var token = this.authCompanyUseCase.executeAdmin(authCompanyDTO);
+            return ResponseEntity.ok().body(token);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+    }
 }

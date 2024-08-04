@@ -45,7 +45,35 @@ public class AuthCandidateUseCase {
                 .withExpiresAt(expiresIn)
                 .withIssuer("vagasnet")
                 .withSubject(candidate.getId().toString())
-                .withClaim("roles", Arrays.asList("candidate"))
+                .withClaim("roles", Arrays.asList("CANDIDATE"))
+                .sign(algorithm);
+
+        var authCandidateResponseDTO = AuthCandidateResponseDTO.builder()
+                .access_token(token)
+                .expires_in(expiresIn.toEpochMilli())
+                .build();
+
+        return authCandidateResponseDTO;
+    }
+
+    public AuthCandidateResponseDTO executeAdmin(AuthCandidateRequestDTO authCandidateRequestDTO) throws AuthenticationException {
+        var candidate = this.candidateRepository.findByUsername(authCandidateRequestDTO.username()).orElseThrow(() -> {
+            throw new UsernameNotFoundException("Username/Password incorrect.");
+        });
+
+        var passwordMatches = this.passwordEncoder.matches(authCandidateRequestDTO.password(), candidate.getPassword());
+
+        if(!passwordMatches) {
+            throw new AuthenticationException();
+        }
+
+        Algorithm algorithm = Algorithm.HMAC256(secretKey);
+        var expiresIn = Instant.now().plus(Duration.ofHours(2));
+        var token = JWT.create()
+                .withExpiresAt(expiresIn)
+                .withIssuer("vagasnet")
+                .withSubject(candidate.getId().toString())
+                .withClaim("roles", Arrays.asList("CANDIDATE", "ADMIN"))
                 .sign(algorithm);
 
         var authCandidateResponseDTO = AuthCandidateResponseDTO.builder()

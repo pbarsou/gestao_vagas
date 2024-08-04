@@ -13,9 +13,6 @@ public class CreateJobUseCase {
     private JobRepository jobRepository;
 
     public JobEntity execute(JobEntity jobEntity) {
-//        this.jobRepository.findById(jobEntity.getId()).ifPresent(user -> {
-//            throw new UserFoundException();
-//        });
         return this.jobRepository.save(jobEntity);
     }
 }

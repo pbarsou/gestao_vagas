@@ -1,9 +1,7 @@
 package br.com.rocketseat.gestao_vagas.modules.candidate;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import br.com.rocketseat.gestao_vagas.modules.company.entities.JobEntity;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -16,6 +14,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Data //cria todos os Getters e Setters
@@ -44,6 +44,13 @@ public class CandidateEntity {
     private String description;
     private String curriculum;
 
+    @ManyToMany(mappedBy = "candidates", cascade = CascadeType.PERSIST)
+    private List<JobEntity> jobApplications = new ArrayList<>();
+
     @CreationTimestamp
     private LocalDateTime createdAt;
+
+    public List<UUID> getJobApplicationsId() {
+        return this.getJobApplications().stream().map(JobEntity::getId).toList();
+    }
 }

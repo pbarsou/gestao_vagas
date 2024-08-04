@@ -58,4 +58,35 @@ public class AuthCompanyUseCase {
 
         return authCompanyResponseDTO;
     }
+
+    public AuthCompanyResponseDTO executeAdmin(AuthCompanyDTO authCompanyDTO) throws AuthenticationException {
+        var company =  this.companyRepository.findByUsername(authCompanyDTO.getUsername()).orElseThrow(() -> {
+            throw new UsernameNotFoundException("Company not found.");
+        });
+
+        var passwordMatches = this.passwordEncoder.matches(authCompanyDTO.getPassword(), company.getPassword());
+
+        if(!passwordMatches) {
+            throw new AuthenticationException();
+        }
+
+        Algorithm algorithm = Algorithm.HMAC256(secretKey);
+
+        var expiresIn = Instant.now().plus(Duration.ofHours(2));
+
+        var token = JWT.create()
+                .withExpiresAt(expiresIn)
+                .withIssuer("vagasnet")
+                .withClaim("roles", Arrays.asList("COMPANY", "ADMIN"))
+                .withSubject(company.getId().toString())
+                .sign(algorithm);
+
+        var authCompanyResponseDTO = AuthCompanyResponseDTO.builder()
+                .acess_token(token)
+                .expires_in(expiresIn.toEpochMilli())
+                .build();
+
+
+        return authCompanyResponseDTO;
+    }
 }

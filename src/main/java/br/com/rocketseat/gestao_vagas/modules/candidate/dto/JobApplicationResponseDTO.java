@@ -5,12 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+import java.util.UUID;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthCandidateResponseDTO {
-
-    private String access_token;
-    private Long expires_in;
+public class JobApplicationResponseDTO {
+    private UUID candidateId;
+    private List<UUID> jobApplications;
 }

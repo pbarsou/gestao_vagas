@@ -11,7 +11,7 @@ import java.util.UUID;
 public class DeleteCompanyUseCase {
 
     @Autowired
-    CompanyRepository companyRepository;
+    private CompanyRepository companyRepository;
 
     public void execute(UUID idCompany) {
         var company = this.companyRepository.findById(idCompany).orElseThrow(() -> {

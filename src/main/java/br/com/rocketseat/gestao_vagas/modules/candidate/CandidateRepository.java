@@ -12,5 +12,4 @@ public interface CandidateRepository extends JpaRepository<CandidateEntity, UUID
     Optional<CandidateEntity> findByUsername(String username);
     Optional<CandidateEntity> findByEmail(String email);
     List<CandidateEntity> findByName(String name);
-
 }

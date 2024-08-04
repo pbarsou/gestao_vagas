@@ -1,5 +1,6 @@
 package br.com.rocketseat.gestao_vagas.security;
 
+import br.com.rocketseat.gestao_vagas.modules.providers.JWTCandidateProvider;
 import br.com.rocketseat.gestao_vagas.modules.providers.JWTCompanyProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -20,6 +21,8 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     @Autowired
     private JWTCompanyProvider jwtCompanyProvider;
+    @Autowired
+    private JWTCandidateProvider jwtCandidateProvider;
 
     @Override
     protected void doFilterInternal(
@@ -45,7 +48,32 @@ public class SecurityFilter extends OncePerRequestFilter {
                         .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toString().toUpperCase()))
                                 .toList();
 
+                System.out.println(grants);
+
                 request.setAttribute("company_id", token.getSubject());
+                UsernamePasswordAuthenticationToken auth =
+                        new UsernamePasswordAuthenticationToken(token.getSubject(), null, grants);
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            }
+        }
+
+        if(request.getRequestURI().startsWith("/candidate")) {
+            if(header != null) {
+                var token = jwtCandidateProvider.validateToken(header);
+
+                if(token == null) {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                }
+
+                var roles = token.getClaim("roles").asList(Object.class);
+
+                var grants = roles.stream()
+                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toString().toUpperCase()))
+                        .toList();
+
+
+                request.setAttribute("candidate_id", token.getSubject());
+
                 UsernamePasswordAuthenticationToken auth =
                         new UsernamePasswordAuthenticationToken(token.getSubject(), null, grants);
                 SecurityContextHolder.getContext().setAuthentication(auth);

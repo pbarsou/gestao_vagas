@@ -14,9 +14,9 @@ public class ProfileCompanyUseCase {
     @Autowired
     private CompanyRepository companyRepository;
 
-    public ProfileCompanyResponseDTO execute(UUID idCompany) {
+    public ProfileCompanyResponseDTO execute(UUID companyId) {
 
-        var company = this.companyRepository.findById(idCompany).orElseThrow(() -> {
+        var company = this.companyRepository.findById(companyId).orElseThrow(() -> {
             throw new UsernameNotFoundException("User not found");
         });
 

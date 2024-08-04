@@ -3,25 +3,29 @@ package br.com.rocketseat.gestao_vagas.modules.candidate.useCases;
 import br.com.rocketseat.gestao_vagas.exceptions.UserFoundException;
 import br.com.rocketseat.gestao_vagas.modules.candidate.CandidateEntity;
 import br.com.rocketseat.gestao_vagas.modules.candidate.CandidateRepository;
+import br.com.rocketseat.gestao_vagas.modules.candidate.dto.ProfileCandidateResponseDTO;
+import br.com.rocketseat.gestao_vagas.modules.company.dto.ProfileCompanyResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class UpdateCandidateUseCase {
 
     @Autowired
-    CandidateRepository candidateRepository;
+    private CandidateRepository candidateRepository;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
-    public CandidateEntity execute(CandidateEntity candidateEntity) {
+    public ProfileCandidateResponseDTO execute(CandidateEntity candidateEntity, UUID candidateId) {
 
         var password = this.passwordEncoder.encode(candidateEntity.getPassword());
 
-        CandidateEntity candidate = this.candidateRepository.findById(candidateEntity.getId()).orElseThrow(() -> {
+        CandidateEntity candidate = this.candidateRepository.findById(candidateId).orElseThrow(() -> {
             throw new UsernameNotFoundException("Candidate not found.");
         });
 
@@ -44,6 +48,16 @@ public class UpdateCandidateUseCase {
         candidate.setDescription(candidateEntity.getDescription());
         candidate.setCurriculum(candidateEntity.getCurriculum());
 
-        return this.candidateRepository.save(candidate);
+        this.candidateRepository.save(candidate);
+
+        var candidateResponseDTO = ProfileCandidateResponseDTO.builder()
+                .name(candidate.getName())
+                .username(candidate.getUsername())
+                .email(candidate.getEmail())
+                .description(candidate.getDescription())
+                .jobApplications(candidate.getJobApplicationsId())
+                .build();
+
+        return candidateResponseDTO;
     }
 }
