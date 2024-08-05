@@ -19,12 +19,13 @@ public class GetCompanyJobsUseCase {
     @Autowired
     private JobRepository jobRepository;
 
-    public List<UUID> execute(UUID companyId) {
+    public List<JobEntity> execute(UUID companyId) {
 
         var company = this.companyRepository.findById(companyId).orElseThrow(() -> {
             throw new UsernameNotFoundException("Company not found.");
         });
 
-        return this.jobRepository.findByCompanyId(companyId).stream().map(JobEntity::getId).toList();
+        return this.jobRepository.findByCompanyId(companyId);
+        //return this.jobRepository.findByCompanyId(companyId).stream().map(JobEntity::getId).toList();
     }
 }

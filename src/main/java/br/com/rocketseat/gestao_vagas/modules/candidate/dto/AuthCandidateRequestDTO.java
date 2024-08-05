@@ -1,5 +1,10 @@
 package br.com.rocketseat.gestao_vagas.modules.candidate.dto;
 
-public record AuthCandidateRequestDTO(String username, String password) {
+import io.swagger.v3.oas.annotations.media.Schema;
 
-}
+public record AuthCandidateRequestDTO(
+        @Schema(example = "eden")
+        String username,
+        @Schema(example = "eden@123")
+        String password
+) {}

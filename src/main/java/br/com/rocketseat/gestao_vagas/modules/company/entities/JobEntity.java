@@ -1,6 +1,8 @@
 package br.com.rocketseat.gestao_vagas.modules.company.entities;
 
 import br.com.rocketseat.gestao_vagas.modules.candidate.CandidateEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -24,16 +26,24 @@ public class JobEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @NotBlank(message = "Esse campo é obrigatório.")
+    @Schema(example = "Desenvolvedor Júnior", description = "Descrição da vaga")
     private String description;
 
     @NotBlank(message = "Esse campo é obrigatório.")
+    @Schema(example = "JÚNIOR", requiredMode = Schema.RequiredMode.REQUIRED, description = "Nível: JÚNIOR, PLENO ou SENIOR")
     private String level;
+
+    @Schema(example = "Gympass, Plano de Saúde, Day Off, VA/VR", description = "Benefícios da vaga")
     private String benefits;
 
+    @JsonIgnore
     @ManyToOne()
     @JoinColumn(name = "company_id", insertable = false, updatable = false)
     private CompanyEntity companyEntity;
 
+    @JsonIgnore
     @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "jobs_candidates",

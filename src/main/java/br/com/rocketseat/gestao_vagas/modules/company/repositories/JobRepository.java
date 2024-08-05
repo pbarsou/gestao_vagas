@@ -11,4 +11,6 @@ import java.util.UUID;
 public interface JobRepository extends JpaRepository<JobEntity, UUID> {
     @Query("SELECT j FROM job j WHERE j.company_id = :company_id")
     List<JobEntity> findByCompanyId(@Param("company_id") UUID companyId);
+
+    List<JobEntity> findByDescriptionContainingIgnoreCase(String filter);
 }
