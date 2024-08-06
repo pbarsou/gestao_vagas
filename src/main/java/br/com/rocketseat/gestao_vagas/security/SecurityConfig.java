@@ -39,11 +39,15 @@ public class SecurityConfig {
                                     .requestMatchers("/candidate/auth").permitAll()
                                     .requestMatchers("/candidate/auth/admin").permitAll()
                                     .requestMatchers("/company/auth/admin").permitAll()
-                                    .requestMatchers("/company/job/").permitAll()
-                                    .requestMatchers(HttpMethod.GET, "/company/job/**").hasRole("ADMIN")
-                                    .requestMatchers("/candidate/job/**").permitAll()
-                                    .requestMatchers( "/company/**").hasRole("ADMIN")
-                                    .requestMatchers( "/candidate/**").hasRole("ADMIN")
+                                    .requestMatchers("/company/job/admin/**").hasRole("ADMIN")
+                                    .requestMatchers("/company/admin/**").hasRole("ADMIN")
+                                    .requestMatchers("/candidate/admin/**").hasRole("ADMIN")
+                                    //.requestMatchers("/candidate/job/").permitAll()
+                                    //.requestMatchers(HttpMethod.GET, "/company/job/**").hasRole("ADMIN")
+                                    //.requestMatchers("/candidate/job/").permitAll()
+                                    //.requestMatchers("/candidate/job/**").permitAll()
+                                    //.requestMatchers( "/company/**").hasRole("ADMIN")
+                                    //.requestMatchers( "/candidate/**").hasRole("ADMIN")
                                     .requestMatchers(SWAGGER_LIST).permitAll();
 
                     auth.anyRequest().authenticated();

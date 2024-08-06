@@ -26,4 +26,12 @@ public class DeleteJobUseCase {
 
         this.jobRepository.delete(job);
     }
+
+    public void executeAdmin(UUID jobId, UUID companyId) {
+        var job = this.jobRepository.findById(jobId).orElseThrow(() -> {
+            throw new UsernameNotFoundException("Job not found.");
+        });
+
+        this.jobRepository.delete(job);
+    }
 }

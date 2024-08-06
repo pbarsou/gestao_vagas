@@ -1,9 +1,8 @@
 package br.com.rocketseat.gestao_vagas.modules.candidate.useCases;
 
-import br.com.rocketseat.gestao_vagas.modules.candidate.CandidateEntity;
-import br.com.rocketseat.gestao_vagas.modules.candidate.CandidateRepository;
+import br.com.rocketseat.gestao_vagas.modules.candidate.entities.CandidateEntity;
+import br.com.rocketseat.gestao_vagas.modules.candidate.repositories.CandidateRepository;
 import br.com.rocketseat.gestao_vagas.util.CandidateCreator;
-import com.fasterxml.jackson.databind.deser.impl.CreatorCandidate;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,8 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @ExtendWith(SpringExtension.class) // jUnit com Spring
 class CreateCandidateUseCaseTest {
 
@@ -35,14 +32,14 @@ class CreateCandidateUseCaseTest {
 
         List<CandidateEntity> candidates = new ArrayList<>(List.of(CandidateCreator.createValidCandidate()));
 
-//        BDDMockito.when(candidateRepositoryMock.findByUsername(ArgumentMatchers.anyString()))
-//                .thenReturn(Optional.of(CandidateCreator.createValidCandidate()));
+        BDDMockito.when(candidateRepositoryMock.findByUsername(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.of(CandidateCreator.createValidCandidate()));
 
         BDDMockito.when(candidateRepositoryMock.findByUsernameOrEmail(ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
                 .thenReturn(Optional.of(CandidateCreator.createValidCandidate()));
 
-//        BDDMockito.when(candidateRepositoryMock.findByName(ArgumentMatchers.anyString()))
-//                .thenReturn(List.of(CandidateCreator.createValidCandidate()));
+        BDDMockito.when(candidateRepositoryMock.findByName(ArgumentMatchers.anyString()))
+                .thenReturn(List.of(CandidateCreator.createValidCandidate()));
     }
 
     @Test

@@ -1,5 +1,6 @@
 package br.com.rocketseat.gestao_vagas.modules.company.useCases;
 
+import br.com.rocketseat.gestao_vagas.exceptions.UserNotFoundException;
 import br.com.rocketseat.gestao_vagas.modules.company.dto.ProfileCompanyResponseDTO;
 import br.com.rocketseat.gestao_vagas.modules.company.repositories.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ public class ProfileCompanyUseCase {
     public ProfileCompanyResponseDTO execute(UUID companyId) {
 
         var company = this.companyRepository.findById(companyId).orElseThrow(() -> {
-            throw new UsernameNotFoundException("User not found");
+            throw new UserNotFoundException();
         });
 
         var companyResponseDTO = ProfileCompanyResponseDTO.builder()

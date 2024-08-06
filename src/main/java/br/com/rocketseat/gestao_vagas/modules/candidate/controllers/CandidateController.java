@@ -1,6 +1,7 @@
 package br.com.rocketseat.gestao_vagas.modules.candidate.controllers;
 
-import br.com.rocketseat.gestao_vagas.modules.candidate.CandidateEntity;
+import br.com.rocketseat.gestao_vagas.modules.candidate.entities.ApplyJobEntity;
+import br.com.rocketseat.gestao_vagas.modules.candidate.entities.CandidateEntity;
 import br.com.rocketseat.gestao_vagas.modules.candidate.dto.JobApplicationResponseDTO;
 import br.com.rocketseat.gestao_vagas.modules.candidate.dto.ProfileCandidateResponseDTO;
 import br.com.rocketseat.gestao_vagas.modules.candidate.useCases.*;
@@ -59,22 +60,23 @@ public class CandidateController {
     }
 
 
-    @PostMapping("/job/{jobId}")
+    @PostMapping("/job/apply")
+    @PreAuthorize("hasRole('CANDIDATE')")
     @Operation(summary = "Aplicar a uma vaga", description = "Essa função é responsável por aplicar um candidato a uma vaga")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
-                    @Content(schema = @Schema(implementation = JobApplicationResponseDTO.class))
+                    @Content(schema = @Schema(implementation = ApplyJobEntity.class))
             }),
             @ApiResponse(responseCode = "400", description = "Candidate not found."),
             @ApiResponse(responseCode = "400", description = "Job not found."),
             @ApiResponse(responseCode = "400", description = "Candidate has already applied for this job.")
     })
     @SecurityRequirement(name = "jwt_auth")
-    public ResponseEntity<Object> applyJob(@PathVariable UUID jobId, HttpServletRequest request) {
+    public ResponseEntity<Object> applyJob(@RequestBody UUID id, HttpServletRequest request) {
         var candidateId = request.getAttribute("candidate_id");
 
         try {
-            var result = this.applyForJobUseCase.execute(UUID.fromString(candidateId.toString()), jobId);
+            var result = this.applyForJobUseCase.execute(UUID.fromString(candidateId.toString()), id);
             return ResponseEntity.ok().body(result);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -82,6 +84,7 @@ public class CandidateController {
     }
 
     @GetMapping("/")
+    @PreAuthorize("hasRole('CANDIDATE')")
     @Operation(summary = "Perfil do candidato", description = "Essa função é responsável por buscar as informações do perfil do candidato.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
@@ -102,7 +105,8 @@ public class CandidateController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/admin/{id}")
+    @PreAuthorize("hasRole('CANDIDATE')")
     @Operation(summary = "Perfil de um candidato", description = "Essa função é responsável por buscar as informações do perfil de um candidato específico.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
@@ -121,6 +125,7 @@ public class CandidateController {
     }
 
     @GetMapping("/job")
+    @PreAuthorize("hasRole('CANDIDATE')")
     @Operation(summary = "Listagem de vagas disponíveis para o candidato", description = "Essa função é responsável por listar todas as vagas disponíveis baseadas no filtro.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
@@ -135,6 +140,7 @@ public class CandidateController {
     }
 
     @PutMapping("/")
+    @PreAuthorize("hasRole('CANDIDATE')")
     @Operation(summary = "Atualização de cadastro do candidato", description = "Essa função é responsável por atualizar as informações do candidato")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
@@ -157,8 +163,9 @@ public class CandidateController {
         }
     }
 
-    @PutMapping("/{id}")
-    @Operation(summary = "Atualização de cadastro de candidato", description = "Essa função é responsável por atualizar as informações de um candidato específico")
+    @PutMapping("/admin/{id}")
+    @PreAuthorize("hasRole('CANDIDATE')")
+    @Operation(summary = "Atualização de cadastro de um candidato", description = "Essa função é responsável por atualizar as informações de um candidato específico cadastrado na base de dados")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
                     @Content(schema = @Schema(implementation = ProfileCandidateResponseDTO.class))
@@ -176,8 +183,9 @@ public class CandidateController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/admin/{id}")
+    @PreAuthorize("hasRole('CANDIDATE')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Remoção de um candidato", description = "Essa função é responsável por deletar um candidato")
     @ApiResponses({
             @ApiResponse(responseCode = "204"),

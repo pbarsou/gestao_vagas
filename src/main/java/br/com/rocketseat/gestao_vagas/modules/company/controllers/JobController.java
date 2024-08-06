@@ -25,7 +25,6 @@ import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @RestController
 @RequestMapping("/company/job")
-@PreAuthorize("hasRole('COMPANY'")
 @Tag(name = "Vagas", description = "Informações das vagas")
 public class JobController {
 
@@ -41,6 +40,7 @@ public class JobController {
     private DeleteJobUseCase deleteJobUseCase;
 
     @PostMapping("/")
+    @PreAuthorize("hasRole('COMPANY'")
     @Operation(summary = "Cadastro de vaga", description = "Essa função é responsável por cadastrar as vagas dentro da empresa.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
@@ -67,8 +67,8 @@ public class JobController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Obtem as informações de uma vaga", description = "Essa função é responsável por obter as informações de uma vaga.")
+    @PreAuthorize("hasRole('COMPANY'")
+    @Operation(summary = "Obtem as informações de uma vaga cadastrada pela empresa", description = "Essa função é responsável por obter as informações de uma vaga cadastrada pela empresa.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
                     @Content( schema = @Schema(implementation = JobResponseDTO.class))
@@ -76,9 +76,31 @@ public class JobController {
             @ApiResponse(responseCode = "400", description = "Job not found")
     })
     @SecurityRequirement(name = "jwt_auth")
-    public ResponseEntity<Object> getJob(@PathVariable UUID id, HttpServletRequest request) {
+    public ResponseEntity<Object> getCompanyJob(@PathVariable UUID id, HttpServletRequest request) {
+        var companyId = request.getAttribute("company_id");
+
         try {
-            var result = this.getJobUseCase.execute(id);
+            var result = this.getJobUseCase.execute(id, UUID.fromString(companyId.toString()));
+            return ResponseEntity.ok().body(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/admin/{id}")
+    @PreAuthorize("hasRole('COMPANY'")
+    //@PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Obtem as informações de qualquer vaga presente na base de dados", description = "Essa função é responsável por obter as informações de qualquer vaga.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content( schema = @Schema(implementation = JobResponseDTO.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Job not found")
+    })
+    @SecurityRequirement(name = "jwt_auth")
+    public ResponseEntity<Object> getAnyJob(@PathVariable UUID id, HttpServletRequest request) {
+        try {
+            var result = this.getJobUseCase.executeAdmin(id);
             return ResponseEntity.ok().body(result);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -86,6 +108,7 @@ public class JobController {
     }
 
     @GetMapping("/")
+    @PreAuthorize("hasRole('COMPANY'")
     @Operation(summary = "Listagem de vagas da empresa", description = "Essa função é responsável por listas as vagas criadas pela empresa.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
@@ -105,8 +128,9 @@ public class JobController {
         }
     }
 
-    @GetMapping("/specific")
-    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/admin/")
+    @PreAuthorize("hasRole('COMPANY'")
+    //@PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Listagem de vagas de uma empresa", description = "Essa função é responsável por listas as vagas criadas por uma empresa específica.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
@@ -125,6 +149,7 @@ public class JobController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('COMPANY'")
     @Operation(summary = "Atualizar dados da vaga", description = "Essa função é responsável por atualizar os dados da vaga.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
@@ -146,6 +171,7 @@ public class JobController {
     }
 
     @DeleteMapping("/{jobId}")
+    @PreAuthorize("hasRole('COMPANY'")
     @Operation(summary = "Remoção de um vaga", description = "Essa função é responsável por deletar uma vaga.")
     @ApiResponses({
             @ApiResponse(responseCode = "204"),
@@ -157,6 +183,25 @@ public class JobController {
 
         try {
             this.deleteJobUseCase.execute(jobId, UUID.fromString(companyId.toString()));
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/admin/{jobId}")
+    @PreAuthorize("hasRole('COMPANY'")
+    @Operation(summary = "Remoção de um vaga", description = "Essa função é responsável por deletar uma vaga.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204"),
+            @ApiResponse(responseCode = "400", description = "Job not found")
+    })
+    @SecurityRequirement(name = "jwt_auth")
+    public ResponseEntity<Object> deleteAnyJob(@PathVariable UUID jobId, HttpServletRequest request) {
+        var companyId = request.getAttribute("company_id");
+
+        try {
+            this.deleteJobUseCase.executeAdmin(jobId, UUID.fromString(companyId.toString()));
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

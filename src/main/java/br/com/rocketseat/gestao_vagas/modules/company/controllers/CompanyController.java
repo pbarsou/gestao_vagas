@@ -57,6 +57,7 @@ public class CompanyController {
     }
 
     @GetMapping("/")
+    @PreAuthorize("hasRole('CANDIDATE')")
     @Operation(summary = "Perfil da empreasa", description = "Essa função é responsável por buscar as informações do perfil da empresa.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
@@ -77,9 +78,10 @@ public class CompanyController {
         }
     }
 
-    @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Obtem dados de uma empreasa", description = "Essa função é responsável por buscar as informações de uma empresa específica.")
+    @GetMapping("/admin/{id}")
+    @PreAuthorize("hasRole('CANDIDATE')")
+    //@PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Obtem dados de uma empresa qualquer", description = "Essa função é responsável por buscar as informações de uma empresa qualquer cadastrada na base de dados.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
                     @Content(schema = @Schema(implementation = ProfileCompanyResponseDTO.class))
@@ -87,7 +89,7 @@ public class CompanyController {
             @ApiResponse(responseCode = "400", description = "Company not found.")
     })
     @SecurityRequirement(name = "jwt_auth")
-    public ResponseEntity<Object> getCompany(@PathVariable UUID id, HttpServletRequest request) {
+    public ResponseEntity<Object> getAnyCompany(@PathVariable UUID id, HttpServletRequest request) {
         try {
             var company = this.profileCompanyUseCase.execute(UUID.fromString(id.toString()));
             return ResponseEntity.ok().body(company);
@@ -97,6 +99,7 @@ public class CompanyController {
     }
 
     @PutMapping("/")
+    @PreAuthorize("hasRole('CANDIDATE')")
     @Operation(summary = "Atualização de cadastro da empresa", description = "Essa função é responsável por atualizar os dados da empresa.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
@@ -119,9 +122,10 @@ public class CompanyController {
         }
     }
 
-    @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Atualização de cadastro de uma empresa", description = "Essa função é responsável por atualizar os dados de uma empresa específica.")
+    @PutMapping("/admin/{id}")
+    @PreAuthorize("hasRole('CANDIDATE')")
+    //@PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Atualização de cadastro de uma empresa específica", description = "Essa função é responsável por atualizar os dados de uma empresa específica cadastrada na base de dados.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
                     @Content(schema = @Schema(implementation = ProfileCompanyResponseDTO.class))
@@ -129,7 +133,7 @@ public class CompanyController {
             @ApiResponse(responseCode = "400", description = "Company not found")
     })
     @SecurityRequirement(name = "jwt_auth")
-    public ResponseEntity<Object> putAdmin(@Valid @RequestBody CompanyEntity companyEntity, @PathVariable UUID id, HttpServletRequest request) {
+    public ResponseEntity<Object> putAnyCompany(@Valid @RequestBody CompanyEntity companyEntity, @PathVariable UUID id, HttpServletRequest request) {
         try {
             var result = this.updateCompanyUseCase.execute(companyEntity, id);
             return ResponseEntity.ok().body(result);
@@ -138,9 +142,10 @@ public class CompanyController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Remoção de uma empreasa", description = "Essa função é responsável por deletar uma empresa.")
+    @DeleteMapping("/admin/{id}")
+    @PreAuthorize("hasRole('CANDIDATE')")
+    //@PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Remoção de uma empresa", description = "Essa função é responsável por deletar uma empresa.")
     @ApiResponses({
             @ApiResponse(responseCode = "204"),
             @ApiResponse(responseCode = "400", description = "Company not found")

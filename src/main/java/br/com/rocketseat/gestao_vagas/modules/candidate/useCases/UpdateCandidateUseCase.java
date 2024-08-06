@@ -1,10 +1,11 @@
 package br.com.rocketseat.gestao_vagas.modules.candidate.useCases;
 
 import br.com.rocketseat.gestao_vagas.exceptions.UserFoundException;
-import br.com.rocketseat.gestao_vagas.modules.candidate.CandidateEntity;
-import br.com.rocketseat.gestao_vagas.modules.candidate.CandidateRepository;
+import br.com.rocketseat.gestao_vagas.modules.candidate.entities.ApplyJobEntity;
+import br.com.rocketseat.gestao_vagas.modules.candidate.entities.CandidateEntity;
+import br.com.rocketseat.gestao_vagas.modules.candidate.repositories.ApplyJobRepository;
+import br.com.rocketseat.gestao_vagas.modules.candidate.repositories.CandidateRepository;
 import br.com.rocketseat.gestao_vagas.modules.candidate.dto.ProfileCandidateResponseDTO;
-import br.com.rocketseat.gestao_vagas.modules.company.dto.ProfileCompanyResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +18,9 @@ public class UpdateCandidateUseCase {
 
     @Autowired
     private CandidateRepository candidateRepository;
+
+    @Autowired
+    private ApplyJobRepository applyJobRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -41,6 +45,8 @@ public class UpdateCandidateUseCase {
             });
         }
 
+        var jobsApplication = applyJobRepository.findByCandidateId(candidate.getId()).stream().map(ApplyJobEntity::getJobId).toList();
+
         candidate.setName(candidateEntity.getName());
         candidate.setUsername(candidateEntity.getUsername());
         candidate.setEmail(candidateEntity.getEmail());
@@ -55,7 +61,7 @@ public class UpdateCandidateUseCase {
                 .username(candidate.getUsername())
                 .email(candidate.getEmail())
                 .description(candidate.getDescription())
-                .jobApplications(candidate.getJobApplicationsId())
+                .jobApplications(jobsApplication)
                 .build();
 
         return candidateResponseDTO;

@@ -1,11 +1,10 @@
-package br.com.rocketseat.gestao_vagas.modules.candidate;
+package br.com.rocketseat.gestao_vagas.modules.candidate.entities;
 
 import br.com.rocketseat.gestao_vagas.modules.company.entities.JobEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -53,14 +52,6 @@ public class CandidateEntity {
     @Schema(example = "", description = "Currículo do candidato")
     private String curriculum;
 
-    @JsonIgnore
-    @ManyToMany(mappedBy = "candidates", cascade = CascadeType.PERSIST)
-    private List<JobEntity> jobApplications = new ArrayList<>();
-
     @CreationTimestamp
     private LocalDateTime createdAt;
-
-    public List<UUID> getJobApplicationsId() {
-        return this.getJobApplications().stream().map(JobEntity::getId).toList();
-    }
 }

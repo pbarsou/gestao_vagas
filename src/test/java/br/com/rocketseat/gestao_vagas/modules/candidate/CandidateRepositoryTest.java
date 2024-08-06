@@ -1,5 +1,7 @@
 package br.com.rocketseat.gestao_vagas.modules.candidate;
 
+import br.com.rocketseat.gestao_vagas.modules.candidate.entities.CandidateEntity;
+import br.com.rocketseat.gestao_vagas.modules.candidate.repositories.CandidateRepository;
 import br.com.rocketseat.gestao_vagas.util.CandidateCreator;
 import jakarta.validation.*;
 import lombok.extern.log4j.Log4j2;

@@ -1,13 +1,14 @@
 package br.com.rocketseat.gestao_vagas.modules.candidate.useCases;
 
+import br.com.rocketseat.gestao_vagas.exceptions.CandidateNotFoundException;
 import br.com.rocketseat.gestao_vagas.exceptions.JobApplicationFoundException;
-import br.com.rocketseat.gestao_vagas.exceptions.UserFoundException;
-import br.com.rocketseat.gestao_vagas.modules.candidate.CandidateRepository;
-import br.com.rocketseat.gestao_vagas.modules.candidate.dto.JobApplicationResponseDTO;
-import br.com.rocketseat.gestao_vagas.modules.company.entities.JobEntity;
+import br.com.rocketseat.gestao_vagas.exceptions.JobNotFoundException;
+import br.com.rocketseat.gestao_vagas.exceptions.UserNotFoundException;
+import br.com.rocketseat.gestao_vagas.modules.candidate.entities.ApplyJobEntity;
+import br.com.rocketseat.gestao_vagas.modules.candidate.repositories.ApplyJobRepository;
+import br.com.rocketseat.gestao_vagas.modules.candidate.repositories.CandidateRepository;
 import br.com.rocketseat.gestao_vagas.modules.company.repositories.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -19,26 +20,29 @@ public class ApplyForJobUseCase {
     private CandidateRepository candidateRepository;
     @Autowired
     private JobRepository jobRepository;
+    @Autowired
+    private ApplyJobRepository applyJobRepository;
 
-    public JobApplicationResponseDTO execute(UUID candidateId, UUID jobiD) {
+    public ApplyJobEntity execute(UUID candidateId, UUID jobId) {
         var candidate = this.candidateRepository.findById(candidateId).orElseThrow(() -> {
-            throw new UsernameNotFoundException("Candidate not found.");
+            throw new CandidateNotFoundException();
         });
 
-        var job = this.jobRepository.findById(jobiD).orElseThrow(() -> {
-            throw new UsernameNotFoundException("Job not found.");
+        var job = this.jobRepository.findById(jobId).orElseThrow(() -> {
+            throw new JobNotFoundException();
         });
 
-        if(job.getCandidates().contains(candidate)) {
+        var candidates = applyJobRepository.findByJobId(job.getId()).stream().map(ApplyJobEntity::getCandidateId).toList();
+
+        if(candidates.contains(candidate)) {
             throw new JobApplicationFoundException();
         }
 
-        job.getCandidates().add(candidate);
-        this.jobRepository.save(job);
-
-        return JobApplicationResponseDTO.builder()
+        var applyJob = ApplyJobEntity.builder()
                 .candidateId(candidateId)
-                .jobApplications(candidate.getJobApplicationsId())
+                .jobId(jobId)
                 .build();
+
+        return applyJobRepository.save(applyJob);
     }
 }
