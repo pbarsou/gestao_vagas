@@ -120,11 +120,11 @@ class CandidateRepositoryTest {
     @DisplayName("User should not validate when Username contains space")
     public void user_ShouldNotValidate_WhenUsernameContainsSpace() {
         CandidateEntity candidate = CandidateEntity.builder()
-                .username("miho azuki")
-                .name("Azuki Miho")
-                .email("miho.azuki@gmail.com")
-                .password("azukizinha")
-                .description("Dubladora. Meu objetivo é me tornar uma grande dubladora e ganhar o papel da protagonista em um anime do Ashirogi Muto.")
+                .name("Eden")
+                .username("eden project")
+                .email("eden@gmail.com")
+                .password("eden@12345")
+                .description("Desenvolvedor Júnior.")
                 .build();
 
         Set<ConstraintViolation<CandidateEntity>> violations = validator.validate(candidate);
@@ -135,14 +135,14 @@ class CandidateRepositoryTest {
     }
 
     @Test
-    @DisplayName("User should not validate when Username contains space")
-    public void user_ShouldNotValidate_WhenUsernameEmailIsNotValid() {
+    @DisplayName("User should not validate when email is not valid")
+    public void user_ShouldNotValidate_WhenEmailIsNotValid() {
         CandidateEntity candidate = CandidateEntity.builder()
-                .username("mihoazuki")
-                .name("Azuki Miho")
-                .email("miho.azuki")
-                .password("azukizinha")
-                .description("Dubladora. Meu objetivo é me tornar uma grande dubladora e ganhar o papel da protagonista em um anime do Ashirogi Muto.")
+                .name("Eden")
+                .username("edenproject")
+                .email("edenproject")
+                .password("eden@12345")
+                .description("Desenvolvedor Júnior.")
                 .build();
 
         Set<ConstraintViolation<CandidateEntity>> violations = validator.validate(candidate);
@@ -153,14 +153,14 @@ class CandidateRepositoryTest {
     }
 
     @Test
-    @DisplayName("User should not validate when Username contains space")
-    public void user_ShouldNotValidate_WhenUsernamePasswordIsNotValid() {
+    @DisplayName("User should not validate when password is not valid")
+    public void user_ShouldNotValidate_WhenPasswordIsNotValid() {
         CandidateEntity candidate = CandidateEntity.builder()
-                .username("mihoazuki")
-                .name("Azuki Miho")
-                .email("miho.azuki@gmail.com")
-                .password("azuki")
-                .description("Dubladora. Meu objetivo é me tornar uma grande dubladora e ganhar o papel da protagonista em um anime do Ashirogi Muto.")
+                .username("eden")
+                .name("Eden")
+                .email("eden@gmail.com")
+                .password("eden@")
+                .description("Desenvolvedor Júnior.")
                 .build();
 
         Set<ConstraintViolation<CandidateEntity>> violations = validator.validate(candidate);

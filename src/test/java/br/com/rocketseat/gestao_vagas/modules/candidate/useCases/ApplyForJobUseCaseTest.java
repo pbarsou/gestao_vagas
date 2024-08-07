@@ -1,5 +1,6 @@
 package br.com.rocketseat.gestao_vagas.modules.candidate.useCases;
 
+import br.com.rocketseat.gestao_vagas.exceptions.CandidateNotFoundException;
 import br.com.rocketseat.gestao_vagas.exceptions.JobNotFoundException;
 import br.com.rocketseat.gestao_vagas.exceptions.UserNotFoundException;
 import br.com.rocketseat.gestao_vagas.modules.candidate.entities.ApplyJobEntity;
@@ -54,7 +55,7 @@ public class ApplyForJobUseCaseTest {
         try {
             this.applyForJobUseCaseMock.execute(null, null);
         } catch (Exception e){
-            assertThat(e).isInstanceOf(UserNotFoundException.class);
+            assertThat(e).isInstanceOf(CandidateNotFoundException.class);
         }
     }
 

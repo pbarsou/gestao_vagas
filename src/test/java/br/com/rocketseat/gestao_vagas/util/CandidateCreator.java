@@ -18,7 +18,7 @@ public class CandidateCreator {
                 .name("Eden")
                 .username("eden")
                 .email("eden@gmail.com")
-                .password("eden@123")
+                .password("eden@12345")
                 .description("Desenvolvedor Júnior.")
                 .build();
     }
@@ -30,7 +30,7 @@ public class CandidateCreator {
                 .name("Eden")
                 .username("eden")
                 .email("eden@gmail.com")
-                .password("eden@123")
+                .password("eden@12345")
                 .description("Desenvolvedor Júnior.")
                 .build();
     }
@@ -42,7 +42,7 @@ public class CandidateCreator {
                 .name("Eden")
                 .username("iameden")
                 .email("eden@gmail.com")
-                .password("eden@123")
+                .password("eden@12345")
                 .description("Desenvolvedor Júnior.")
                 .build();
     }
@@ -50,10 +50,10 @@ public class CandidateCreator {
     public static ProfileCandidateResponseDTO createProfileCandidateResponse() {
 
         return ProfileCandidateResponseDTO.builder()
-                .username("moritakamashiro")
-                .name("Mashiro Moritaka")
-                .email("mashiro.moritaka@gmail.com")
-                .description("Mangaká. Meu objetivo é me tornar o maior mangaká de todos os tempos.")
+                .name("Eden")
+                .username("iameden")
+                .email("eden@gmail.com")
+                .description("Desenvolvedor Júnior.")
                 .jobApplications(jobApplicationsId)
                 .build();
     }
