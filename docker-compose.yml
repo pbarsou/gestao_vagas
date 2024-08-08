@@ -1,4 +1,6 @@
-version: '3.8'
+networks:
+  gv-network:
+    driver: bridge
 
 services:
   backend:
@@ -8,6 +10,8 @@ services:
       - .env
     ports:
       - "8080:8080"
+    networks:
+      - gv-network
     depends_on:
       - postgres
 
@@ -18,9 +22,32 @@ services:
       - .env
     ports:
       - "5432:5432"
+    networks:
+      - gv-network
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    networks:
+      - gv-network
+    depends_on:
+      - backend
+
+  grafana:
+     image: grafana/grafana:latest
+     ports:
+       - 3000:3000
+     networks:
+       - gv-network
+
 volumes:
   postgres_data:
+  prometheus_data:
+  grafana_data:
 

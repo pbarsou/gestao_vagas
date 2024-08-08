@@ -15,8 +15,8 @@ public class CandidateCreator {
     public static CandidateEntity createCandidateToBeSaved() {
 
         return CandidateEntity.builder()
-                .name("Eden")
                 .username("eden")
+                .name("Eden")
                 .email("eden@gmail.com")
                 .password("eden@12345")
                 .description("Desenvolvedor Júnior.")
@@ -27,8 +27,8 @@ public class CandidateCreator {
 
         return CandidateEntity.builder()
                 .id(UUID.fromString("0e80a8e5-a265-4228-801b-a2f32387e8bd"))
-                .name("Eden")
                 .username("eden")
+                .name("Eden")
                 .email("eden@gmail.com")
                 .password("eden@12345")
                 .description("Desenvolvedor Júnior.")
@@ -39,8 +39,8 @@ public class CandidateCreator {
 
         return CandidateEntity.builder()
                 .id(UUID.fromString("0e80a8e5-a265-4228-801b-a2f32387e8bd"))
-                .name("Eden")
                 .username("iameden")
+                .name("Eden")
                 .email("eden@gmail.com")
                 .password("eden@12345")
                 .description("Desenvolvedor Júnior.")
@@ -50,8 +50,8 @@ public class CandidateCreator {
     public static ProfileCandidateResponseDTO createProfileCandidateResponse() {
 
         return ProfileCandidateResponseDTO.builder()
-                .name("Eden")
                 .username("iameden")
+                .name("Eden")
                 .email("eden@gmail.com")
                 .description("Desenvolvedor Júnior.")
                 .jobApplications(jobApplicationsId)

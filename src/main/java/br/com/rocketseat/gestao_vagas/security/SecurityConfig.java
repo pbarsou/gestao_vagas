@@ -27,7 +27,7 @@ public class SecurityConfig {
             "/swagger-ui/**",
             "/v3/api-docs/**",
             "/swagger-resources/**",
-            "/actuator/**"
+            "/actuator/**",
     };
 
     @Bean
@@ -43,12 +43,6 @@ public class SecurityConfig {
                                     .requestMatchers("/company/job/admin/**").hasRole("ADMIN")
                                     .requestMatchers("/company/admin/**").hasRole("ADMIN")
                                     .requestMatchers("/candidate/admin/**").hasRole("ADMIN")
-                                    //.requestMatchers("/candidate/job/").permitAll()
-                                    //.requestMatchers(HttpMethod.GET, "/company/job/**").hasRole("ADMIN")
-                                    //.requestMatchers("/candidate/job/").permitAll()
-                                    //.requestMatchers("/candidate/job/**").permitAll()
-                                    //.requestMatchers( "/company/**").hasRole("ADMIN")
-                                    //.requestMatchers( "/candidate/**").hasRole("ADMIN")
                                     .requestMatchers(PERMIT_ALL_LIST).permitAll();
 
                     auth.anyRequest().authenticated();
