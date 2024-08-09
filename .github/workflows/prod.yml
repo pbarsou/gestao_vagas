@@ -23,3 +23,13 @@ jobs:
         run: docker build -t pbarsou/gestao_vagas .
       - name: Publish image
         run: docker push pbarsou/gestao_vagas
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Pull image docker hub
+        run: git pull pbarsou/gestao_vagas:latest
+      - name: Remove container
+        run: docker rm -f gestao-vagas
+      - name: Run docker container
+        run: docker run -d -p 8080:8080 -e DATABASE_URL=${{secrets.DATABASE_URL}} -e DATABASE_PASSWORD=${{secrets.DATABASE_PASSWORD}} -e DATABASE_USERNAME=${{secrets.DATABASE_USERNAME}} -e SECURITY_TOKEN_SECRET=${{secrets.SECURITY_TOKEN_SECRET}} -e SECURITY_TOKEN_SECRET_CANDIDATE=${{secrets.SECURITY_TOKEN_SECRET_CANDIDATE}} --name gestao-vagas pbarsou/gestao_vagas
