@@ -1,159 +1,155 @@
-# Gestão de Vagas
+# Job Management
 
-## Sobre o projeto
+## About the Project
 
-Desenvolvimento de uma API REST para empresas criarem e gerenciarem suas vagas, enquanto os
-possÍveis candidatos podem fazer o cadastro, visualizar vagas, se inscrever em uma vaga, visualizar
-informações relevantes do seu perfil e vagas que se candidatou. 
+This project involves the development of a **REST API** that allows companies to **create and manage their job openings**. Meanwhile, potential candidates can **register**, **view available jobs**, **apply for positions**, and access relevant information about their **profile** and **applied jobs**.
 
-## Tecnologias Utilizadas.
+## Technologies Used
 
-- **Linguagem de Programação:** Java 17.
-- **Framework:** Spring (Spring Initializr).
-- **Gerenciamento de Dependências:** Maven.
-- **Banco de Dados:** PostgresSQL, HyperSql (Testes).
-- **Cloud:** AWS, Azure
-- **Ferramentas Adicionais:** Hibernate (JPA), Lombok, Docker, Kubernets, SonarQube, Jacoco, Prometheus e Grafana.
+* **Programming Language:** Java 17
+* **Framework:** Spring (Spring Initializr)
+* **Dependency Management:** Maven
+* **Database:** PostgreSQL, HSQLDB (for Tests)
+* **Cloud:** AWS, Azure
+* **Additional Tools:** Hibernate (JPA), Lombok, Docker, Kubernetes, SonarQube, JaCoCo, Prometheus, and Grafana
 
-## Rodando o projeto
+## Running the Project
 
+1.  `$ docker-compose -build -d`
+    * Container configurations are defined in the `docker-compose.yml` file.
+    * Once the container is built, you don't need to rebuild it: `$ docker-compose up -d`.
 
- 1. `$ docker-compose -build -d`
+## Features
 
-- As configurações do container estão conngiguradas no arquivo `docker-compose.yml`.
-- Uma vez o container montado, não é necessáio mais buildar: `$ docker-compose up -d`.
+### For Companies:
 
-## Funcionalidades.
+* **Create New Job Openings:** Companies can register new job openings, providing details like description, benefits, and experience level.
+* **View Registered Job Openings:** Companies can view detailed information about a specific job opening, including the list of registered candidates.
+* **View and Update Profile:** Companies can view their registration profile, including their registered data (name, username, email, website, and description) and a list of jobs they've created. Companies can also update their profile data.
 
-### Para Empresas:
+### For Candidates:
 
-- **Cadastro de novas vagas:** As empresas podem cadastrar novas vagas, fornecendo detalhes como descrição, benefícios e level.
-- **Vizualização vagas cadastradas:** As empresas podem visualizar dados detalhados de uma vaga específica, incluindo a lista de candidatos inscritos.
-- **Vizualização e atualização de perfil:** As empresas podem visualizar o seu perfil de inscrição, visualizando seus dados cadastrados, como nome, username, email, website e descrição, incluindo a lista de vagas já criadas. As empresas também são capazes de atualizar os dados do seu perfil.
+* **Apply for a Job:** Candidates can apply for one or more available job openings.
+* **View Profile:** Candidates can view their registration profile, including their registered data (name, username, email, description) and the list of jobs they've applied for. Candidates can also update their profile data.
 
-### Para Participantes:
+## Business Rules
 
-- **Se candidatar a uma vaga:** Os participantes podem se candidatar a uma ou mais vagas disponíveis.
-- **Visualização de perfil:** Os participantes podem visualizar o seu perfil de inscrição, visualizando seus dados cadastrados, como nome, username, e-mail, descrição e a lista vagas que se candidatou. O candidato também é capaz de atualizar os dados do seu perfil.
+* A candidate can apply for a job only once.
+* It should not be possible to create a new candidate with an existing username or email.
+* It should not be possible to create a company with an existing username or email.
 
-## Regras de Negócio
+## Project Structure
 
--  Um candidato só pode se candidatar a uma vaga uma única vez.
--  Não deve ser possível criar um novo candidato com um mesmo username ou email já cadastrado.
--  Não deve ser possível criar uma empresa com um mesmo username ou email já cadastrado.
+* **Controllers:** Responsible for receiving and processing HTTP requests.
+* **Services:** Contain the application's business logic.
+* **Repositories:** Responsible for interacting with the database.
+* **DTOs (Data Transfer Objects):** Used for transferring data between the client and the server.
+* **Models:** Represent the database entities.
+* **Exception Handling:** Custom exception handling to properly manage errors.
+* **Security:** Application security module.
 
-## Estrutura do Projeto.
+## Documentation
 
-- **Controllers:** Responsáveis por receber e processar as requisições HTTP.
-- **Services:** Contêm a lógica de negócios da aplicação.
-- **Repositories:** Responsáveis pela interação com o banco de dados.
-- **DTOs (Data Transfer Objects):** Utilizados para transferir dados entre o cliente e o servidor.
-- **Models:** Representam as entidades do banco de dados.
-- **Exceptions Handling:** Tratamento de exceções personalizado para lidar com erros de forma adequada.
-- **Security:**  Módulo de segurança da aplicação.
+The application's documentation was created using **Swagger**, one of the most widely used tools for documentation generation.
 
-## Documentação
+* Documentation access route: `http://localhost:8080/swagger-ui/index.html`
 
-A documentação da aplicação foi criada utilziando o Swagger, uma das ferramentas mais utilziadas para a criação de documentação.
+## Unit and Integration Tests
 
-- Rota de acesso a documentação: `http://localhost:8080/swagger-ui/index.html`
+For testing, **JUnit** was used in conjunction with **Mockito** for creating mocks.
 
-## Testes Unitários e de Integração
+**H2**, an in-memory database, was utilized for testing purposes.
 
-Para a realização dos testes foi utilizado o JUnity + Mockito para realização dos Mocks.
+## Code Quality
 
-Foi utilizado o H2, que é um banco em memória para realização do testes.
+#### SonarQube + JaCoCo
 
-## Qualidade do Código
+For code quality, **SonarQube** was employed. It's a code analysis tool that helps detect potential issues in the code. It was used alongside **JaCoCo**, a code coverage analysis tool that helps measure how much of the Java source code has been tested.
 
-#### SonarQube + Jacoco
+* Available at the endpoint: `localhost:9000`. Register manually to generate an access key. The key has an expiration date.
 
-Para qualidade do código, foi utilizado o Sonar Qube, ferramenta de análise de código que auxilia na detecção de problemas que podem ocorrer no código, em conjunto com o Jacoco, que é uma ferramenta de análise de cobertura de código que nos ajuda a medir o quanto do código-fonte Java foi testado
+Example SonarQube login configuration:
 
-- Disponível no endpoint: `localhost:9000`. Efetue o cadastro manualmente para gerar a chave de acesso. A chave tem prazo de validade.
-
-Exemplo de configuração de login do SonarQube:
-
-```no mvn cli:
- mvn clean verify sonar:sonar -Dsonar.projectKey=gestao_vagas -Dsonar.host.url=http://localhost:9000  -Dsonar.login=chave_de_acesso
+```shell:
+mvn clean verify sonar:sonar -Dsonar.projectKey=gestao_vagas -Dsonar.host.url=http://localhost:9000 -Dsonar.login=access_key
 ```
 
-## Monitoramento
+## Monitoring
 
-Uso do Spring Actuator para monitoramento, junto do Prometheus e do Grafana, para vizualização de métricas da aplicação de forma visual.
+We use **Spring Actuator** for application monitoring, along with **Prometheus** and **Grafana** for visual representation of application metrics.
 
-#### Informações relevantes
+#### Relevant Information
 
-- Acesso as métricas da aplicação pelo actuator:
+* Access application metrics via Actuator:
 
-```json
-{
-  "_links": {
-    "self": {
-      "href": "http://localhost:8080/actuator",
-      "templated": false
-    },
-    "health-path": {
-      "href": "http://localhost:8080/actuator/health/{*path}",
-      "templated": true
-    },
-    "health": {
-      "href": "http://localhost:8080/actuator/health",
-      "templated": false
-    },
-    "prometheus": {
-      "href": "http://localhost:8080/actuator/prometheus",
-      "templated": false
-    },
-    "metrics": {
-      "href": "http://localhost:8080/actuator/metrics",
-      "templated": false
-    },
-    "metrics-requiredMetricName": {
-      "href": "http://localhost:8080/actuator/metrics/{requiredMetricName}",
-      "templated": true
+    ```json
+    {
+      "_links": {
+        "self": {
+          "href": "http://localhost:8080/actuator",
+          "templated": false
+        },
+        "health-path": {
+          "href": "http://localhost:8080/actuator/health/{*path}",
+          "templated": true
+        },
+        "health": {
+          "href": "http://localhost:8080/actuator/health",
+          "templated": false
+        },
+        "prometheus": {
+          "href": "http://localhost:8080/actuator/prometheus",
+          "templated": false
+        },
+        "metrics": {
+          "href": "http://localhost:8080/actuator/metrics",
+          "templated": false
+        },
+        "metrics-requiredMetricName": {
+          "href": "http://localhost:8080/actuator/metrics/{requiredMetricName}",
+          "templated": true
+        }
+      }
     }
-  }
-}
+    ```
 
-```
-- Acesso ao Prometheus: `localhost:9090`
-- Acesso ao Grafana: `localhost:3000`
+* Access Prometheus: `localhost:9090`
+* Access Grafana: `localhost:3000`
 
-## Implantação
+## Deployment
 
-Inicialmente foi-se utilizado o Docker com o Azure Kubernets Service + Azure Container Registry, mas devido a expiração do uso gratuito, migrei a aplicação para a AWS, criando um RDS com PostgresSQL como base e uma EC2, na qual configurei um pipeline de CI/CD para conexão com o banco + implantação na EC2 a cada git push realizado.
+Initially, Docker was used with Azure Kubernetes Service + Azure Container Registry. However, due to the expiration of the free tier, I migrated the application to **AWS**. I created an **RDS instance with PostgreSQL** as the database and an **EC2 instance**. On the EC2 instance, I configured a **CI/CD pipeline** for database connection and deployment to the EC2 instance with each `git push`.
 
-## Principais Endpoints.
+## Key Endpoints
 
-**Endpoints Livres:**
+**Open Endpoints:**
 
-- **POST /candidate:** Cria um novo candidato.
-- **POST /company:** Cria uma nova empresa.
-- **GET /candidate/auth:** Cria um token de acesso para o candidato.
-- **GET /company/auth:** Cria um token de acesso para a empresa.
-- **GET /candidate/auth/admin:** Cria um token de acesso para o candidato no modo administrador.
-- **GET /company/auth/admin:** Cria um token de acesso para a empresa no modo administrador.
+* **POST /candidate:** Creates a new candidate.
+* **POST /company:** Creates a new company.
+* **GET /candidate/auth:** Creates an access token for a candidate.
+* **GET /company/auth:** Creates an access token for a company.
+* **GET /candidate/auth/admin:** Creates an access token for a candidate in administrator mode.
+* **GET /company/auth/admin:** Creates an access token for a company in administrator mode.
 
-**Endpoints que necessitam de autorização:**
+**Endpoints Requiring Authorization:**
 
-- **POST /candidate/job/apply:** Realiza a candidatura do candidato a vaga.
-- **POST /company/job/** Cria uma nova vaga.
+* **POST /candidate/job/apply:** Allows a candidate to apply for a job.
+* **POST /company/job/:** Creates a new job opening.
 
-### Demais endpoints que necessitam de autenticação.
+### Other Endpoints Requiring Authentication
 
-### Principais Bibliotecas (Packages)
+### Main Libraries (Packages)
 
-- [`Spring Boot`](https://spring.io/)
-- [`Project Lombok`](https://projectlombok.org/)
-- [`Docker`](https://www.docker.com/)
-- [`PostgreSQL`](https://www.postgresql.org/)
-- [`java-jwt`](https://github.com/auth0/java-jwt)
-- [`Swagger`](https://swagger.io/)
-- [`JUinit`](https://junit.org/junit4/)
-- [`H2 Database`](https://www.h2database.com/html/main.html)
+* [`Spring Boot`](https://spring.io/)
+* [`Project Lombok`](https://projectlombok.org/)
+* [`Docker`](https://www.docker.com/)
+* [`PostgreSQL`](https://www.postgresql.org/)
+* [`java-jwt`](https://github.com/auth0/java-jwt)
+* [`Swagger`](https://swagger.io/)
+* [`JUnit`](https://junit.org/junit4/)
+* [`H2 Database`](https://www.h2database.com/html/main.html)
 
-##
+---
 
 <h5 align="center">
   2024 - <a href="https://github.com/pbarsou/">Pablo Barbosa</a>
