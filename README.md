@@ -1,4 +1,4 @@
-# Job Management
+# Job Vacancy Management
 
 ## About the Project
 
